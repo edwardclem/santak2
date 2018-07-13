@@ -49,10 +49,14 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = SantakWindow.cpp \
-		main.cpp moc_SantakWindow.cpp
+		SantakDrawArea.cpp \
+		main.cpp moc_SantakWindow.cpp \
+		moc_SantakDrawArea.cpp
 OBJECTS       = SantakWindow.o \
+		SantakDrawArea.o \
 		main.o \
-		moc_SantakWindow.o
+		moc_SantakWindow.o \
+		moc_SantakDrawArea.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -109,7 +113,9 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exceptions.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
-		santak2.pro SantakWindow.h SantakWindow.cpp \
+		santak2.pro SantakWindow.h \
+		SantakDrawArea.h SantakWindow.cpp \
+		SantakDrawArea.cpp \
 		main.cpp
 QMAKE_TARGET  = santak2
 DESTDIR       = #avoid trailing-slash linebreak
@@ -276,8 +282,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents SantakWindow.h $(DISTDIR)/
-	$(COPY_FILE) --parents SantakWindow.cpp main.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents SantakWindow.h SantakDrawArea.h $(DISTDIR)/
+	$(COPY_FILE) --parents SantakWindow.cpp SantakDrawArea.cpp main.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -300,11 +306,15 @@ check: first
 
 compiler_rcc_make_all:
 compiler_rcc_clean:
-compiler_moc_header_make_all: moc_SantakWindow.cpp
+compiler_moc_header_make_all: moc_SantakWindow.cpp moc_SantakDrawArea.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_SantakWindow.cpp
+	-$(DEL_FILE) moc_SantakWindow.cpp moc_SantakDrawArea.cpp
 moc_SantakWindow.cpp: SantakWindow.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/edward/projects/santak2 -I/home/edward/projects/santak2 -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include SantakWindow.h -o moc_SantakWindow.cpp
+
+moc_SantakDrawArea.cpp: SantakWindow.h \
+		SantakDrawArea.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/edward/projects/santak2 -I/home/edward/projects/santak2 -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include SantakDrawArea.h -o moc_SantakDrawArea.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -320,14 +330,22 @@ compiler_clean: compiler_moc_header_clean
 
 ####### Compile
 
-SantakWindow.o: SantakWindow.cpp SantakWindow.h
+SantakWindow.o: SantakWindow.cpp SantakWindow.h \
+		SantakDrawArea.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o SantakWindow.o SantakWindow.cpp
+
+SantakDrawArea.o: SantakDrawArea.cpp SantakDrawArea.h \
+		SantakWindow.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o SantakDrawArea.o SantakDrawArea.cpp
 
 main.o: main.cpp SantakWindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
 
 moc_SantakWindow.o: moc_SantakWindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_SantakWindow.o moc_SantakWindow.cpp
+
+moc_SantakDrawArea.o: moc_SantakDrawArea.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_SantakDrawArea.o moc_SantakDrawArea.cpp
 
 ####### Install
 

@@ -1,19 +1,29 @@
 #ifndef SANTAKWINDOW_H
 #define SANTAKWINDOW_H
 
-#include <QWidget>
-
+#include <QMainWindow>
 
 class QPushButton;
-class SantakWindow : public QWidget
+class QRadioButton;
+class SantakDrawArea;
+  //defining enum for the current drawing symbol
+class SantakWindow : public QMainWindow
 {
  Q_OBJECT
  public:
   explicit SantakWindow(QWidget *parent = 0);
+ private slots:
+  void slotClear();
+  void slotSearch();
+  void slotSwitchSymbol();
  private:
-   QPushButton *clear_button;
-   QPushButton *search_button;
+   QPushButton *clearButton;
+   QPushButton *searchButton;
+   QRadioButton *bigWedge;
+   QRadioButton *smallWedge;
+   QRadioButton *winkelhaken;
 
+   SantakDrawArea *drawArea;
 
  signals:
  public slots:

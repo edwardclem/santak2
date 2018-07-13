@@ -6,9 +6,10 @@ TEMPLATE = app
 TARGET = santak2
 INCLUDEPATH += .
 
+QT += core
 QT += gui
 QT += widgets
 
 # Input
-HEADERS += SantakWindow.h
-SOURCES += SantakWindow.cpp main.cpp
+HEADERS += SantakWindow.h SantakDrawArea.h
+SOURCES += SantakWindow.cpp SantakDrawArea.cpp main.cpp
