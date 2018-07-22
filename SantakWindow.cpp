@@ -8,16 +8,18 @@
 #include <QWidget>
 #include <QMainWindow>
 #include "SantakDrawArea.h"
-
+#include <opencv2/opencv.hpp>
+#include <opencv2/core/core.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 
 SantakWindow::SantakWindow(QWidget *parent) :
  QMainWindow(parent) {
 
-   drawArea = new SantakDrawArea(this);
-
    // Set size of the window
    setFixedSize(300, 300);
    setWindowTitle("santak2");
+   //create drawArea
+   drawArea = new SantakDrawArea(this);
    setCentralWidget(drawArea);
 
    //defining search and clear buttons
@@ -69,6 +71,30 @@ void SantakWindow::slotClear(){
   this->drawArea->clearImage();
 }
 
+cv::Mat SantakWindow::getMat(){
+  //returns OpenCV image array from Qt image
+  //Source: https://asmaloney.com/2013/11/code/converting-between-cvmat-and-qimage-or-qpixmap/
+
+  cv::Mat  query( this->drawArea->image.height(), this->drawArea->image.width(),
+                          CV_8UC4,
+                          const_cast<uchar*>(this->drawArea->image.bits()),
+                          static_cast<size_t>(this->drawArea->image.bytesPerLine())
+                          );
+
+  //clone to memory
+  //converts to grayscale
+  cv::Mat gray;
+  cv::cvtColor(query, gray, cv::COLOR_BGR2GRAY);
+
+  return gray;
+
+}
+
 void SantakWindow::slotSearch(){
   QTextStream(stdout) << "Firing up the ol' GPU" << endl;
+  cv::Mat img = this->getMat();
+
+  //saving just to test
+
+  cv::imwrite("test.jpg", img);
 }

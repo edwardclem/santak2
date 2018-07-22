@@ -3,6 +3,9 @@
 
 #include <QMainWindow>
 
+#include <opencv2/opencv.hpp>
+#include <opencv2/core/core.hpp>
+
 class QPushButton;
 class QRadioButton;
 class SantakDrawArea;
@@ -12,6 +15,7 @@ class SantakWindow : public QMainWindow
  Q_OBJECT
  public:
   explicit SantakWindow(QWidget *parent = 0);
+  cv::Mat getMat();
  private slots:
   void slotClear();
   void slotSearch();
