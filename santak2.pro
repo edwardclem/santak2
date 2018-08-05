@@ -5,11 +5,16 @@
 TEMPLATE = app
 TARGET = santak2
 INCLUDEPATH += .
+QMAKE_CXXFLAGS = -g
+
+#importing opencv stuff and specifying C++ version
+CONFIG += link_pkgconfig  c++14
+PKGCONFIG += opencv
 
 QT += core
 QT += gui
 QT += widgets
 
 # Input
-HEADERS += SantakWindow.h SantakDrawArea.h
-SOURCES += SantakWindow.cpp SantakDrawArea.cpp main.cpp
+HEADERS += SantakWindow.h SantakDrawArea.h SantakInference.h SantakInferenceOpenCV.h SantakResultsDialog.h SantakChar.h
+SOURCES += SantakWindow.cpp SantakDrawArea.cpp main.cpp SantakChar.cpp SantakInference.cpp SantakInferenceOpenCV.cpp

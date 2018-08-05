@@ -9,7 +9,6 @@
 class QPushButton;
 class QRadioButton;
 class SantakDrawArea;
-  //defining enum for the current drawing symbol
 class SantakWindow : public QMainWindow
 {
  Q_OBJECT

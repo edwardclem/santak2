@@ -14,8 +14,8 @@ CC            = gcc
 CXX           = g++
 DEFINES       = -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -m64 -pipe -O2 -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-CXXFLAGS      = -m64 -pipe -O2 -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I. -I. -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64
+CXXFLAGS      = -g -O2 -std=c++1y -Wall -W -D_REENTRANT -fPIC $(DEFINES)
+INCPATH       = -I. -I. -isystem /usr/local/include/opencv -isystem /usr/local/include -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64
 QMAKE         = /usr/lib/x86_64-linux-gnu/qt5/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -36,7 +36,7 @@ DISTNAME      = santak21.0.0
 DISTDIR = /home/edward/projects/santak2/.tmp/santak21.0.0
 LINK          = g++
 LFLAGS        = -m64 -Wl,-O1
-LIBS          = $(SUBLIBS) -L/usr/X11R6/lib64 -lQt5Widgets -lQt5Gui -lQt5Core -lGL -lpthread 
+LIBS          = $(SUBLIBS) -L/usr/X11R6/lib64 -L/usr/local/lib -lopencv_cudabgsegm -lopencv_superres -lopencv_videostab -lopencv_cudaoptflow -lopencv_cudastereo -lopencv_cudacodec -lopencv_cudaobjdetect -lopencv_stitching -lopencv_cudalegacy -lopencv_cudafeatures2d -lopencv_cudawarping -lopencv_bioinspired -lopencv_tracking -lopencv_dpm -lopencv_stereo -lopencv_rgbd -lopencv_xobjdetect -lopencv_line_descriptor -lopencv_surface_matching -lopencv_hfs -lopencv_xphoto -lopencv_optflow -lopencv_ximgproc -lopencv_sfm -lopencv_reg -lopencv_freetype -lopencv_datasets -lopencv_text -lopencv_img_hash -lopencv_dnn_objdetect -lopencv_dnn -lopencv_ccalib -lopencv_structured_light -lopencv_viz -lopencv_phase_unwrapping -lopencv_plot -lopencv_bgsegm -lopencv_hdf -lopencv_face -lopencv_photo -lopencv_cudaimgproc -lopencv_cudafilters -lopencv_objdetect -lopencv_xfeatures2d -lopencv_shape -lopencv_video -lopencv_ml -lopencv_cudaarithm -lopencv_saliency -lopencv_fuzzy -lopencv_aruco -lopencv_calib3d -lopencv_features2d -lopencv_highgui -lopencv_videoio -lopencv_imgcodecs -lopencv_imgproc -lopencv_flann -lopencv_core -lopencv_cudev -lQt5Widgets -lQt5Gui -lQt5Core -lGL -lpthread 
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -50,13 +50,21 @@ OBJECTS_DIR   = ./
 
 SOURCES       = SantakWindow.cpp \
 		SantakDrawArea.cpp \
-		main.cpp moc_SantakWindow.cpp \
-		moc_SantakDrawArea.cpp
+		main.cpp \
+		SantakChar.cpp \
+		SantakInference.cpp \
+		SantakInferenceOpenCV.cpp moc_SantakWindow.cpp \
+		moc_SantakDrawArea.cpp \
+		moc_SantakResultsDialog.cpp
 OBJECTS       = SantakWindow.o \
 		SantakDrawArea.o \
 		main.o \
+		SantakChar.o \
+		SantakInference.o \
+		SantakInferenceOpenCV.o \
 		moc_SantakWindow.o \
-		moc_SantakDrawArea.o
+		moc_SantakDrawArea.o \
+		moc_SantakResultsDialog.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -102,6 +110,9 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/resolve_config.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_post.prf \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/c++11.prf \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/c++14.prf \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/link_pkgconfig.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/warn_on.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/resources.prf \
@@ -114,9 +125,16 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
 		santak2.pro SantakWindow.h \
-		SantakDrawArea.h SantakWindow.cpp \
+		SantakDrawArea.h \
+		SantakInference.h \
+		SantakInferenceOpenCV.h \
+		SantakResultsDialog.h \
+		SantakChar.h SantakWindow.cpp \
 		SantakDrawArea.cpp \
-		main.cpp
+		main.cpp \
+		SantakChar.cpp \
+		SantakInference.cpp \
+		SantakInferenceOpenCV.cpp
 QMAKE_TARGET  = santak2
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = santak2
@@ -192,6 +210,9 @@ Makefile: santak2.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64/qmake.c
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/resolve_config.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_post.prf \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/c++11.prf \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/c++14.prf \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/link_pkgconfig.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/warn_on.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/resources.prf \
@@ -253,6 +274,9 @@ Makefile: santak2.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64/qmake.c
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/resolve_config.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_post.prf:
+/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/c++11.prf:
+/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/c++14.prf:
+/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/link_pkgconfig.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/warn_on.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/resources.prf:
@@ -282,8 +306,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents SantakWindow.h SantakDrawArea.h $(DISTDIR)/
-	$(COPY_FILE) --parents SantakWindow.cpp SantakDrawArea.cpp main.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents SantakWindow.h SantakDrawArea.h SantakInference.h SantakInferenceOpenCV.h SantakResultsDialog.h SantakChar.h $(DISTDIR)/
+	$(COPY_FILE) --parents SantakWindow.cpp SantakDrawArea.cpp main.cpp SantakChar.cpp SantakInference.cpp SantakInferenceOpenCV.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -306,15 +330,18 @@ check: first
 
 compiler_rcc_make_all:
 compiler_rcc_clean:
-compiler_moc_header_make_all: moc_SantakWindow.cpp moc_SantakDrawArea.cpp
+compiler_moc_header_make_all: moc_SantakWindow.cpp moc_SantakDrawArea.cpp moc_SantakResultsDialog.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_SantakWindow.cpp moc_SantakDrawArea.cpp
+	-$(DEL_FILE) moc_SantakWindow.cpp moc_SantakDrawArea.cpp moc_SantakResultsDialog.cpp
 moc_SantakWindow.cpp: SantakWindow.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/edward/projects/santak2 -I/home/edward/projects/santak2 -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include SantakWindow.h -o moc_SantakWindow.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/edward/projects/santak2 -I/home/edward/projects/santak2 -I/usr/local/include/opencv -I/usr/local/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include SantakWindow.h -o moc_SantakWindow.cpp
 
-moc_SantakDrawArea.cpp: SantakWindow.h \
-		SantakDrawArea.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/edward/projects/santak2 -I/home/edward/projects/santak2 -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include SantakDrawArea.h -o moc_SantakDrawArea.cpp
+moc_SantakDrawArea.cpp: SantakDrawArea.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/edward/projects/santak2 -I/home/edward/projects/santak2 -I/usr/local/include/opencv -I/usr/local/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include SantakDrawArea.h -o moc_SantakDrawArea.cpp
+
+moc_SantakResultsDialog.cpp: SantakChar.h \
+		SantakResultsDialog.h
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/edward/projects/santak2 -I/home/edward/projects/santak2 -I/usr/local/include/opencv -I/usr/local/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include SantakResultsDialog.h -o moc_SantakResultsDialog.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -334,18 +361,35 @@ SantakWindow.o: SantakWindow.cpp SantakWindow.h \
 		SantakDrawArea.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o SantakWindow.o SantakWindow.cpp
 
-SantakDrawArea.o: SantakDrawArea.cpp SantakDrawArea.h \
-		SantakWindow.h
+SantakDrawArea.o: SantakDrawArea.cpp SantakDrawArea.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o SantakDrawArea.o SantakDrawArea.cpp
 
-main.o: main.cpp SantakWindow.h
+main.o: main.cpp SantakWindow.h \
+		SantakInferenceOpenCV.h \
+		SantakInference.h \
+		SantakChar.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
+
+SantakChar.o: SantakChar.cpp SantakChar.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o SantakChar.o SantakChar.cpp
+
+SantakInference.o: SantakInference.cpp SantakChar.h \
+		SantakInference.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o SantakInference.o SantakInference.cpp
+
+SantakInferenceOpenCV.o: SantakInferenceOpenCV.cpp SantakInferenceOpenCV.h \
+		SantakInference.h \
+		SantakChar.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o SantakInferenceOpenCV.o SantakInferenceOpenCV.cpp
 
 moc_SantakWindow.o: moc_SantakWindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_SantakWindow.o moc_SantakWindow.cpp
 
 moc_SantakDrawArea.o: moc_SantakDrawArea.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_SantakDrawArea.o moc_SantakDrawArea.cpp
+
+moc_SantakResultsDialog.o: moc_SantakResultsDialog.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_SantakResultsDialog.o moc_SantakResultsDialog.cpp
 
 ####### Install
 

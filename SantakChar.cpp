@@ -1,5 +1,6 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/core.hpp>
+#include "SantakChar.h"
 
 SantakChar::SantakChar(std::string name, std::string desc, cv::Mat im, cv::Mat cnt){
       //assign properties to character class

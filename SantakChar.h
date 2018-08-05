@@ -4,6 +4,9 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/core/core.hpp>
 
+#ifndef SANTAKCHAR_H
+#define SANTAKCHAR_H
+
 class SantakChar{
   public:
     SantakChar(std::string name, std::string desc, cv::Mat im, cv::Mat cnt);
@@ -14,4 +17,6 @@ class SantakChar{
     cv::Mat img;
     //contours for lookup, preprocessed
     cv::Mat contours;
-}
+};
+
+#endif

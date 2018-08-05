@@ -3,23 +3,31 @@
 #include <QTextStream>
 #include <iostream>
 #include "SantakWindow.h"
+#include "SantakInferenceOpenCV.h"
 #include <opencv2/hdf.hpp>
 
 int main(int argc, char **argv)
 {
- QApplication app (argc, argv);
+  if (argc < 2){
+    std::cout << "Please provide a data prefix for h5 and JSON files." << std::endl;
+  } else{
+    std::string prefix;
+    prefix.append(argv[1]);
 
- cv::Ptr<cv::hdf::HDF5> h5io = cv::hdf::open("data/hdf5/proto_20.h5");
+    SantakInferenceOpenCV inf = SantakInferenceOpenCV(prefix);
 
- if (h5io->hlexists("/contours") && h5io->hlexists("imgs")){
-   QTextStream(stdout) << "HDF5 looks good" << endl;
- }
+  }
 
- SantakWindow window;
 
- window.show();
+  return 0;
 
- h5io->close();
-
- return app.exec();
+ // QApplication app (argc, argv);
+ //
+ // SantakWindow window;
+ //
+ // window.show();
+ //
+ // h5io->close();
+ //
+ // return app.exec();
 }
